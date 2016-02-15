@@ -1,5 +1,5 @@
-# OpenFin Application window closing example
-This is a vanilla JavaScript app seed for developing OpenFin apps. It is free from frameworks and build systems, though you may add them as you see fit.
+# OpenFin InterAppBus example
+A very basic app, creating child apps and passing messages from them via the InterAppBus.
 
 It has a simple Node/Express server for local development.
 
@@ -16,11 +16,11 @@ Navigate to the root folder where 'server.js' resides with your command line too
 $ node server
 ```
 
-This should start a simple Node server at [http://localhost:3030](http://localhost:3030), then, click the link below to install as an openFin app.
+This should start a simple Node server at [http://localhost:9097](http://localhost:9097), then, click the link below to install as an openFin app.
 
 If you wish to change to localhost port you will need to change the references in "server.js", "app.json" and in the installer link below.
 
-[installer](https://dl.openfin.co/services/download?fileName=window_closing&config=http://localhost:3030/app.json)
+[installer](https://dl.openfin.co/services/download?fileName=bnpp_interapp&config=http://localhost:9097/app.json)
 
 Things to note. 
 

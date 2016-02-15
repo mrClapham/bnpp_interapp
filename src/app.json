@@ -3,17 +3,18 @@
   "startup_app": {
     "name": "OpenFin windowclosing",
     "description": "windowclosing",
-    "url": "http://localhost:3030",
-    "uuid": "openfin-closing-events-demo",
+    "url": "http://localhost:9097",
+    "uuid": "interapp-events-test",
     "autoShow": true
   },
   "runtime": {
     "arguments": "",
-    "version": "beta"
+    "version": "4.40.2.0",
+    "__version": "5.44.9.2"
   },
   "shortcut": {
     "company": "OpenFin",
-    "description": "OpenFin windowclosing",
-    "name": "OpenFin windowclosing"
+    "description": "test interapp bus and window sizing",
+    "name": "BNPP_interApp"
   }
 }

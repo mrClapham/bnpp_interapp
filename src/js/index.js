@@ -1,4 +1,5 @@
-var _mainWin, apps = []
+var _mainWin, _interAppMessageField, apps = [];
+//They were all 5.44.9.2. And before they were 4.40.2.0. We only have one openfin app and we spawn other apps from it.
 
 document.addEventListener("DOMContentLoaded", function(){
     init();
@@ -19,6 +20,24 @@ function initWithOpenFin(){
     // NB it is 'Window' not 'Application' that the EventListener is being attached to
     _mainWin = fin.desktop.Window.getCurrent();
 
+
+
+    fin.desktop.System.getVersion(function (version) {
+        try{
+            document.querySelector('#of-version').innerText = "OpenFin version "+version;
+        }catch(err){
+            //---
+        }
+    });
+
+
+    initInterApp();
+    document.querySelector("#new-btt").addEventListener('click', function(e){
+        initNewApp("new-app").then(function(value){
+            apps.push(value);
+        });
+    });
+
     document.querySelector("#min-btt").addEventListener('click', function(e){
         minAll()
     });
@@ -28,7 +47,7 @@ function initWithOpenFin(){
     });
 
     _mainWin.addEventListener('close-requested', function(e) {
-        var challenge = confirm('are you sure?');
+        var challenge = confirm('Closing this app will close all child apps.');
         if (challenge == true) {
             terminateAllApps();
             _mainWin.close(true);
@@ -36,6 +55,8 @@ function initWithOpenFin(){
             console.log("The confirm was false")
         }
     });
+
+/*
 //create an new app
     initNewApp("BGCIROVolumeMatch").then(function(value){
         var _childWin = value.getWindow()
@@ -64,7 +85,9 @@ function initWithOpenFin(){
         });
         apps.push(value);
     });
+    */
 }
+
 
 function initNoOpenFin(){
     alert("OpenFin is not available - you are probably running in a browser.");
@@ -72,9 +95,25 @@ function initNoOpenFin(){
 
 function terminateAllApps(){
     for(var app in apps ){
-        apps[app].terminate();
+        apps[app].close();
     }
 }
+
+function initInterApp(){
+    console.log("Init with interapp called");
+    _interAppMessageField = document.querySelector("#inter-app-message")
+    fin.desktop.InterApplicationBus.addSubscribeListener(function (uuid, topic) {
+        console.log("The application " + uuid + " has subscribed to " + topic);
+    });
+
+    fin.desktop.InterApplicationBus.subscribe("*",
+        "universal-message",
+        function (message, uuid) {
+            var _message = "The application " + uuid + " send this message " + message;
+            _interAppMessageField.innerHTML = message.text + message.num;
+            console.log(_message);
+        });
+};
 
 function minAll(){
     for(var app in apps ){
@@ -91,25 +130,23 @@ function maxAll(){
 
 function initNewApp(uuid){
     return new Promise(function(resolve, reject){
-        var volumeMatchApplication = new fin.desktop.Application({
-            name: "BGC IRO Volume Match",
+        var SpawnedApplication = new fin.desktop.Application({
+            name: "A New OpenFinApp",
             uuid: uuid,
-            url: "http://localhost:3030/child.html",
+            url: "http://localhost:9097/child.html",
             mainWindowOptions: {
-                name: "BGC IRO Volume Match",
-                autoShow: false,
-                defaultCentered: true,
-                alwaysOnTop: true,
-                state: "minimized",
-                windowState: "minimized",
-                saveWindowState: false,
+                name: "OpenFin Application",
+                autoShow: true,
+                defaultCentered: false,
+                alwaysOnTop: false,
+                saveWindowState: true,
                 icon: "favicon.ico"
             }
         }, function () {
-            // Ensure the Volume Match application is closed when the main application is closed.
+            // Ensure the spawned application are closed when the main application is closed.
             console.log("running");
-            volumeMatchApplication.run();
-            resolve(volumeMatchApplication)
+            SpawnedApplication.run();
+            resolve(SpawnedApplication)
         });
     })
 
