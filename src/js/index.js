@@ -1,4 +1,4 @@
-var _mainWin, _interAppMessageField, apps = [];
+var _mainWin, _interAppMessageField, apps = [], winId = 0;
 //They were all 5.44.9.2. And before they were 4.40.2.0. We only have one openfin app and we spawn other apps from it.
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -20,8 +20,6 @@ function initWithOpenFin(){
     // NB it is 'Window' not 'Application' that the EventListener is being attached to
     _mainWin = fin.desktop.Window.getCurrent();
 
-
-
     fin.desktop.System.getVersion(function (version) {
         try{
             document.querySelector('#of-version').innerText = "OpenFin version "+version;
@@ -29,11 +27,11 @@ function initWithOpenFin(){
             //---
         }
     });
-
-
+    initRezizing();
     initInterApp();
     document.querySelector("#new-btt").addEventListener('click', function(e){
-        initNewApp("new-app").then(function(value){
+        initNewApp("APP_"+winId).then(function(value){
+            winId++;
             apps.push(value);
         });
     });
@@ -114,6 +112,19 @@ function initInterApp(){
             console.log(_message);
         });
 };
+
+function initRezizing(){
+    _mainWin.addEventListener("bounds-changed", function (event) {
+        console.log("The window has been moved or resized ", event);
+        fin.desktop.InterApplicationBus.publish("bounds-changed-event", {
+            bounds: event
+        });
+    }, function () {
+        console.log("The registration was successful");
+    },function (reason) {
+        console.log("failure:" + reason);
+    });
+}
 
 function minAll(){
     for(var app in apps ){
