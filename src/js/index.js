@@ -107,6 +107,7 @@ function initInterApp(){
     fin.desktop.InterApplicationBus.subscribe("*",
         "universal-message",
         function (message, uuid) {
+          console.log(message);
             var _message = "The application " + uuid + " send this message " + message;
             _interAppMessageField.innerHTML = message.text + message.num;
             console.log(_message);
