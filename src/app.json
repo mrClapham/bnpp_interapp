@@ -9,10 +9,12 @@
   },
   "runtime": {
     "arguments": "",
-    "__version": "4.40.2.0",
-    "_version": "5.44.9.2",
-    "version": "5.44.10.18"
-
+    "___version": "4.40.2.0",
+    "__version": "5.44.9.2",
+    "_version": "5.44.10.18",
+    "works_for_client__version": "4.40.4.2",
+    "breaks_for_client_version": "5.44.9.2",
+    "version": "5.44.9.2"
   },
   "shortcut": {
     "company": "OpenFin",

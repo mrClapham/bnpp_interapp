@@ -102,7 +102,8 @@ function sendMessage(){
         console.log("ERROR MESSAGE ", e)
     };
 
-    fin.desktop.InterApplicationBus.send('interapp-events-test', null, 'universal-message', {
+   // fin.desktop.InterApplicationBus.send('interapp-events-test', null, 'universal-message', {
+    fin.desktop.InterApplicationBus.send('interapp-events-test', 'universal-message', {
         num: _random,
         text: "The random number is: "
     },successCallback, errorCallback);
